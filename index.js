@@ -25,7 +25,7 @@ const peerServer = ExpressPeerServer(server, {
   debug: true,
 });
 
-app.use("/peerjs", peerServer);
+app.use("/", peerServer);
 
 app.use(express.static('public'));
 
@@ -34,7 +34,7 @@ app.use(express.static('public'));
 
 app.use(cors('*'));
 
-app.get('/', (req, res) => res.send('Hello World!'));
+// app.get('/', (req, res) => res.send('Hello World!'));
 
 io.listen(server, {
   cors: {
