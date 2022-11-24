@@ -18,7 +18,7 @@ const port = 3000;
 //  },
 //   debugLevel: 'ALL',
 // });
-
+app.use(cors('*'));
 app.use(cors());
 
 const peerServer = ExpressPeerServer(server, {
