@@ -3,23 +3,34 @@ const cors = require('cors');
 const io = require('socket.io')({
   path: '/webrtc'
 });
+const { ExpressPeerServer } = require("peer");
 const app = express();
+const server = require("http").Server(app);
 const port = 3000;
-const Turn = require('node-turn');
 
-const turn = new Turn({
- // set options
- authMech: 'long-term',
- credentials: {
-   username: "password",    
- },
-  debugLevel: 'ALL',
-});
+// const Turn = require('node-turn');
+
+// const turn = new Turn({
+//  // set options
+//  authMech: 'long-term',
+//  credentials: {
+//    username: "password",    
+//  },
+//   debugLevel: 'ALL',
+// });
 
 app.use(cors());
+
+const peerServer = ExpressPeerServer(server, {
+  debug: true,
+});
+
+app.use("/peerjs", peerServer);
+
 app.use(express.static('public'));
 
-const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+// const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
 
 app.use(cors('*'));
 
@@ -30,11 +41,11 @@ io.listen(server, {
     origin: '*',
   }
 });
-
-turn.start(()=>{
-  console.log("TURN server is running");
-});
-// turn.logger.info('TURN server is running on port ' + turn.options.port);
+server.listen(3000);
+// turn.start(()=>{
+//   console.log("TURN server is running");
+// });
+// // turn.logger.info('TURN server is running on port ' + turn.options.port);
 
 const webRTCNamespace = io.of('/webRTCPeers');
 webRTCNamespace.on('connection', socket => {
