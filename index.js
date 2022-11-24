@@ -9,7 +9,10 @@ const Turn = require('node-turn');
 
 const turn = new Turn({
  // set options
-  authMech: 'none',
+ authMech: 'long-term',
+ credentials: {
+   username: "password",    
+ },
   debugLevel: 'ALL',
 });
 
