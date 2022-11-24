@@ -5,20 +5,36 @@ const io = require('socket.io')({
 });
 const app = express();
 const port = 3000;
+const Turn = require('node-turn');
+
+const turn = new Turn({
+ // set options
+ authMech: 'long-term',
+ credentials: {
+   username: "password",    
+ },
+  debugLevel: 'ALL',
+});
+
+app.use(cors());
+app.use(express.static('public'));
+
+const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 app.use(cors('*'));
 
 app.get('/', (req, res) => res.send('Hello World!'));
-
-const server = app.listen(port, () => {
-  console.log(`Example app listening on port ${port}!`);
-});
 
 io.listen(server, {
   cors: {
     origin: '*',
   }
 });
+
+turn.start(()=>{
+  console.log("TURN server is running");
+});
+// turn.logger.info('TURN server is running on port ' + turn.options.port);
 
 const webRTCNamespace = io.of('/webRTCPeers');
 webRTCNamespace.on('connection', socket => {
